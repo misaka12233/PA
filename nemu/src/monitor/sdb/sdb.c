@@ -83,7 +83,7 @@ static int cmd_x(char *args)
   uint32_t pos;
   sscanf(arg, "%x", &pos);
   for (int i = 0; i < l; i++, pos += 4)
-      printf("0x%x\n", vaddr_read(pos, 4));
+      printf("0x%8x\n", vaddr_read(pos, 4));
 	return 0;
 }
 
