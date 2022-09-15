@@ -62,7 +62,7 @@ static int cmd_si(char *args)
 	else
 	{
 		int now = 0;
-		for (int i = strlen(arg) - 1; i >= 0; i--)
+		for (int i = 0; i < strlen(arg); i++)
 			now = now * 10 + arg[i] - '0';
 		cpu_exec(now);
 	}
