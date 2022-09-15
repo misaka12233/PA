@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <cpu/cpu.h>
+#include <memory/vaddr.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
@@ -74,6 +75,15 @@ static int cmd_info(char *args)
 
 static int cmd_x(char *args)
 {
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) return 0;
+  int l = atoi(arg);
+  arg = strtok(NULL, " ");
+  if (arg == NULL) return 0;
+  uint32_t pos;
+  sscanf(arg, "%x", &pos);
+  for (int i = 0; i < l; i++, pos += 4)
+      printf("0x%x\n", vaddr_read(pos, 4));
 	return 0;
 }
 
