@@ -59,7 +59,13 @@ static int cmd_si(char *args)
 {
   char *arg = strtok(NULL, " ");
 	if (arg == NULL) cpu_exec(1);
-	else cpu_exec(atoi(arg));
+	else
+	{
+		int now = 0;
+		for (int i = strlen(arg) - 1; i >= 0; i--)
+			now = now * 10 + arg[i] - '0';
+		cpu_exec(now);
+	}
 	return 0;
 }
 
