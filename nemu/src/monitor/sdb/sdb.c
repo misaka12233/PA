@@ -78,9 +78,8 @@ static int cmd_x(char *args)
 {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
-  int l = atoi(arg);
-  l = l + 0;
-  arg = strtok(NULL, " ");
+  //int l = atoi(arg);
+  arg = arg + strlen(arg) + 1;
   if (arg == NULL) return 0;
   bool success = true;
   expr(arg, &success);
