@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
+#include "expr.c"
 #include <cpu/cpu.h>
 #include <memory/vaddr.h>
 #include <readline/readline.h>
@@ -69,7 +70,8 @@ static int cmd_info(char *args)
   char *arg = strtok(NULL, " ");
 	if (strcmp(arg, "r") == 0)
 		isa_reg_display();
-	else;
+	else
+    printf("unfinished\n");
 	return 0;
 }
 
@@ -78,12 +80,14 @@ static int cmd_x(char *args)
   char *arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
   int l = atoi(arg);
+  l = l + 0;
   arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
-  uint32_t pos;
+  assert(make_token(arg));
+  /*uint32_t pos;
   sscanf(arg, "%x", &pos);
   for (int i = 0; i < l; i++, pos += 4)
-      printf("0x%08x\n", vaddr_read(pos, 4));
+      printf("0x%08x\n", vaddr_read(pos, 4));*/
 	return 0;
 }
 
