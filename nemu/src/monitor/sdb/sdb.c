@@ -24,7 +24,6 @@ static int is_batch_mode = false;
 
 void init_regex();
 void init_wp_pool();
-bool make_token(char *e);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -83,7 +82,9 @@ static int cmd_x(char *args)
   l = l + 0;
   arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
-  assert(make_token(arg));
+  bool success = true;
+  expr(arg, &success);
+  assert(success);
   /*uint32_t pos;
   sscanf(arg, "%x", &pos);
   for (int i = 0; i < l; i++, pos += 4)
