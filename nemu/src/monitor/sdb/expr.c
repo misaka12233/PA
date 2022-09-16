@@ -39,10 +39,10 @@ static struct rule {
   {" +", TK_NOTYPE},           // spaces
   {"\\+", '+'},                // plus
   {"==", TK_EQ},               // equal
-  {"-", '-'},                  // minus
+  {"\\-", '-'},                  // minus
   {"\\*", '*'},                // mutiply
   {"/", '/'},                  // divide
-  {"[1,9][0,9]*", TK_INTNUM},  // number
+  {"[1-9][0-9]*", TK_INTNUM},  // number
   {"\\(", '('},                // left bracket
   {"\\)", ')'}                 // right bracket
 };
