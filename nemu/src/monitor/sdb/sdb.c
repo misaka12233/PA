@@ -78,16 +78,27 @@ static int cmd_x(char *args)
 {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
-  //int l = atoi(arg);
+  int l = atoi(arg);
   arg = arg + strlen(arg) + 1;
   if (arg == NULL) return 0;
   bool success = true;
-  expr(arg, &success);
-  assert(success);
-  /*uint32_t pos;
-  sscanf(arg, "%x", &pos);
-  for (int i = 0; i < l; i++, pos += 4)
-      printf("0x%08x\n", vaddr_read(pos, 4));*/
+  uint32_t pos = expr(arg, &success);
+  if (success)
+  {
+    for (int i = 0; i < l; i++, pos += 4)
+      printf("0x%08x\n", vaddr_read(pos, 4));
+  }
+  else puts("Wrong Experssion");
+	return 0;
+}
+
+static int cmd_p(char *args)
+{
+  char *arg = strtok(NULL, " ");
+  bool success = true;
+  uint32_t val = expr(arg, &success);
+  if (success) printf("%u\n", val);
+  else puts("Wrong Experssion");
 	return 0;
 }
 
@@ -102,6 +113,7 @@ static struct {
   { "si", "Run N instructions of the program", cmd_si },
 	{ "info", "Print the status of the program", cmd_info },
 	{ "x", "Scan the internal storage", cmd_x },
+  { "p", "Calculate the value of an expression", cmd_p}
   /* TODO: Add more commands */
 
 };
