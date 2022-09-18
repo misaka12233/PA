@@ -129,9 +129,9 @@ bool check_parentheses(int p, int q, bool *success)
   {
     if (tokens[i].type == '(') cnt++;
     else if (tokens[i].type == ')') cnt--;
-    if (cnt < 0) {printf("%d %d\n", p, q); *success = false;}
+    if (cnt < 0) {printf("%d %d %d %d\n", p, q, cnt, i); *success = false;}
   }
-  if (cnt != 0) {printf("%d %d\n", p, q); *success = false;}
+  if (cnt != 0) {printf("%d %d %d\n", p, q, cnt); *success = false;}
   return (tokens[p].type == '(' && tokens[q].type == ')');
 }
 
