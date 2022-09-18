@@ -129,10 +129,21 @@ bool check_parentheses(int p, int q, bool *success)
   {
     if (tokens[i].type == '(') cnt++;
     else if (tokens[i].type == ')') cnt--;
-    if (cnt < 0) {printf("%d %d %d %d %s\n", p, q, cnt, i, tokens[i].str); *success = false;}
+    if (cnt < 0) *success = false;
   }
-  if (cnt != 0) {printf("%d %d %d\n", p, q, cnt); *success = false;}
-  return (tokens[p].type == '(' && tokens[q].type == ')');
+  if (cnt != 0) *success = false;
+  if (*success && tokens[p].type == '(' && tokens[q].type == ')')
+  {
+    cnt = 0;
+    for (int i = p + 1; i <= q - 1; i++)
+    {
+      if (tokens[i].type == '(') cnt++;
+      else if (tokens[i].type == ')') cnt--;
+      if (cnt < 0) return false;
+    }
+    return cnt == 0;
+  }
+  else return false;
 }
 
 uint32_t get_main_op(int p, int q, bool *success)
@@ -173,7 +184,7 @@ uint32_t eval(int p, int q, bool *success) {
   if (p > q) {
     /* Bad expression */
     *success = false;
-    puts("bad");
+    //puts("bad");
     return 0;
   }
   else if (p == q) {
@@ -186,7 +197,7 @@ uint32_t eval(int p, int q, bool *success) {
     else
     {
       *success = false;
-      puts("not number");
+      //puts("not number");
       return 0;
     }
   }
@@ -195,12 +206,12 @@ uint32_t eval(int p, int q, bool *success) {
      * If that is the case, just throw away the parentheses.
      */
     if (*success) return eval(p + 1, q - 1, success);
-    else {puts("bracket"); return 0;}
+    else return 0;
   }
   else {
-    if (!(*success)) {puts("bracket"); return 0;}
+    if (!(*success)) return 0;
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
-    if (!(*success)) {puts("operator"); return 0;}
+    if (!(*success)) return 0;
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
     uint32_t val2 = eval(op + 1, q, success);
