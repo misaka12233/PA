@@ -94,9 +94,8 @@ static int cmd_x(char *args)
 
 static int cmd_p(char *args)
 {
-  char *arg = strtok(NULL, " ");
   bool success = true;
-  uint32_t val = expr(arg, &success);
+  uint32_t val = expr(args, &success);
   if (success) printf("%u\n", val);
   else puts("Wrong Experssion");
 	return 0;
