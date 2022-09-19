@@ -183,7 +183,7 @@ uint32_t eval(int p, int q, bool *success) {
   if (p > q) {
     /* Bad expression */
     *success = false;
-    //puts("bad");
+    puts("bad");
     return 0;
   }
   else if (p == q) {
@@ -195,13 +195,12 @@ uint32_t eval(int p, int q, bool *success) {
     {
       uint32_t x;
       sscanf(tokens[p].str, "%u", &x);
-      printf("%u\n", x);
       return x;
     }
     else
     {
       *success = false;
-      //puts("not number");
+      puts("not number");
       return 0;
     }
   }
@@ -210,11 +209,12 @@ uint32_t eval(int p, int q, bool *success) {
      * If that is the case, just throw away the parentheses.
      */
     if (*success) return eval(p + 1, q - 1, success);
-    else return 0;
+    else {puts("bracket"); return 0;}
   }
   else {
     if (!(*success)) return 0;
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
+    puts("operator");
     if (!(*success)) return 0;
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
@@ -222,16 +222,15 @@ uint32_t eval(int p, int q, bool *success) {
     if (!(*success)) return 0;
 
     switch (tokens[op].type) {
-      case '+': printf("%u\n", val1 + val2); return val1 + val2;
-      case '-': printf("%u\n", val1 - val2);return val1 - val2;
-      case '*': printf("%u\n", val1 * val2);return val1 * val2;
+      case '+': return val1 + val2;
+      case '-': return val1 - val2;
+      case '*': return val1 * val2;
       case '/': 
         if (val2 == 0)
         {
           *success = false;
           return 0;
         }
-        printf("%u\n", val1 + val2);
         return val1 / val2;
       default: assert(0);
     }
