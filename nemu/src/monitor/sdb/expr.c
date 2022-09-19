@@ -158,7 +158,7 @@ bool check_parentheses(int p, int q, bool *success)
   else return false;
 }
 
-uint32_t get_main_op(int p, int q, bool *success)
+uint32_t get_main_op(int p, int q)
 {
   int cnt = 0, pos = -1, rk = 0;
   for (int i = p; i <= q; i++)
@@ -202,7 +202,6 @@ uint32_t get_main_op(int p, int q, bool *success)
       default: break;
     }
   }
-  if (pos == -1) *success = false;
   return pos;
 }
 
@@ -210,7 +209,8 @@ word_t isa_reg_str2val(const char *s, bool *success);
 word_t vaddr_read(vaddr_t addr, int len);
 
 uint32_t eval(int p, int q, bool *success) {
-  if (p > q) {
+  int op;
+  if (p > q || !(*success)) {
     /* Bad expression */
     *success = false;
     puts("bad");
@@ -242,14 +242,8 @@ uint32_t eval(int p, int q, bool *success) {
     if (*success) return eval(p + 1, q - 1, success);
     else {puts("bracket"); return 0;}
   }
-  else if (tokens[p].type == TK_DEREF)
-    return vaddr_read(eval(p + 1, q, success), 4);
-  else if (tokens[p].type == TK_NEG)
-    return -eval(p + 1, q, success);
-  else {
-    if (!(*success)) {puts("bracket"); return 0;}
-    int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
-    if (!(*success)) {puts("operator"); return 0;}
+  else if ((op = get_main_op(p, q)) != -1){
+    // the position of 主运算符 in the token expression
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
     uint32_t val2 = eval(op + 1, q, success);
@@ -272,6 +266,15 @@ uint32_t eval(int p, int q, bool *success) {
         return val1 / val2;
       default: assert(0);
     }
+  }
+  else if (tokens[p].type == TK_DEREF)
+    return vaddr_read(eval(p + 1, q, success), 4);
+  else if (tokens[p].type == TK_NEG)
+    return -eval(p + 1, q, success);
+  else 
+  {
+    *success = false;
+    return 0;
   }
 }
 
