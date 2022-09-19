@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   for (int i = 1; i <= 9937; i++)
   {
     uint32_t tmp = fscanf(fp, "%u%s", &result, s);
-    printf("successfully get %s\n", s);
+    //printf("successfully get %s\n", s);
     assert(tmp);
     tmp = expr(s, &success);
     if(result != tmp || !success)
