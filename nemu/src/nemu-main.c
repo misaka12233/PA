@@ -42,6 +42,7 @@ int main(int argc, char *argv[]) {
     assert(tmp);
     bool success = true;
     tmp = expr(s, &success);
+    assert(success);
     if(result != tmp || !success)
       printf("%d %u %u\n", i, result, tmp);
   }
