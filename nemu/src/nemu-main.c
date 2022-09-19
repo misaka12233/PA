@@ -34,7 +34,6 @@ int main(int argc, char *argv[]) {
   /* Start engine. */
 
   FILE *fp = fopen("./src/input", "r");
-  printf("successfully get\n");
   uint32_t result;
   bool success = true;
   for (int i = 1; i <= 9937; i++)

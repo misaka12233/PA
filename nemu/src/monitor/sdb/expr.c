@@ -42,7 +42,7 @@ static struct rule {
   {"\\-", '-'},                  // minus
   {"\\*", '*'},                // mutiply
   {"/", '/'},                  // divide
-  {"[1-9][0-9]*", TK_INTNUM},  // number
+  {"[1-9][0-9]*u", TK_INTNUM},  // number
   {"\\(", '('},                // left bracket
   {"\\)", ')'}                 // right bracket
 };
