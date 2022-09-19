@@ -183,7 +183,7 @@ uint32_t eval(int p, int q, bool *success) {
   if (p > q) {
     /* Bad expression */
     *success = false;
-    //puts("bad");
+    puts("bad");
     return 0;
   }
   else if (p == q) {
@@ -200,7 +200,7 @@ uint32_t eval(int p, int q, bool *success) {
     else
     {
       *success = false;
-      //puts("not number");
+      puts("not number");
       return 0;
     }
   }
@@ -214,7 +214,7 @@ uint32_t eval(int p, int q, bool *success) {
   else {
     if (!(*success)) {return 0;}
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
-    if (!(*success)) {return 0;}
+    if (!(*success)) {puts("operator"); return 0;}
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
     uint32_t val2 = eval(op + 1, q, success);
