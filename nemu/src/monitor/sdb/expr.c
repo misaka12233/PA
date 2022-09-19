@@ -42,7 +42,7 @@ static struct rule {
   {"\\-", '-'},                  // minus
   {"\\*", '*'},                // mutiply
   {"/", '/'},                  // divide
-  {"[1-9][0-9]*u", TK_INTNUM},  // number
+  {"[1-9][0-9]*", TK_INTNUM},  // number
   {"\\(", '('},                // left bracket
   {"\\)", ')'}                 // right bracket
 };
@@ -105,7 +105,6 @@ static bool make_token(char *e) {
           default: 
             tokens[nr_token].type = rules[i].token_type;
             memcpy(tokens[nr_token].str, substr_start, (substr_len <= 32)? substr_len : 32);
-            if (tokens[nr_token].type == TK_INTNUM) tokens[nr_token].str[substr_len - 1] = '\0';
             nr_token++;
         }
 
