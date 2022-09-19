@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
     tmp = expr(s, &success);
     if(result != tmp || !success)
     {
-      printf("%d %d %d\n", i, result, tmp);
+      printf("%d %u %u\n", i, result, tmp);
       return 0;
     }
   }
