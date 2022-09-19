@@ -35,12 +35,12 @@ int main(int argc, char *argv[]) {
 
   FILE *fp = fopen("./src/input", "r");
   uint32_t result;
-  bool success = true;
   for (int i = 1; i <= 9937; i++)
   {
     uint32_t tmp = fscanf(fp, "%u%s", &result, s);
     //printf("successfully get %s\n", s);
     assert(tmp);
+    bool success = true;
     tmp = expr(s, &success);
     if(result != tmp || !success)
       printf("%d %u %u\n", i, result, tmp);
