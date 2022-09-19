@@ -148,7 +148,7 @@ bool check_parentheses(int p, int q, bool *success)
 uint32_t get_main_op(int p, int q, bool *success)
 {
   int cnt = 0, pos = -1, rk = 0;
-  for (int i = p; i <= q; i++)
+  for (int i = q; i >= p; i--)
   {
     switch (tokens[i].type)
     {
