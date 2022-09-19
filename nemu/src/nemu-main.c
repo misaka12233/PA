@@ -21,6 +21,7 @@ void engine_start();
 int is_exit_status_bad();
 
 word_t expr(char *e, bool *success);
+char s[65536];
 
 int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
@@ -33,7 +34,7 @@ int main(int argc, char *argv[]) {
   /* Start engine. */
   printf("successfully get\n");
   FILE *fp = fopen("/input", "r");
-  char s[65536];
+  
   uint32_t result;
   bool success = true;
   for (int i = 1; i <= 9937; i++)
