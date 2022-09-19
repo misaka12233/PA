@@ -210,12 +210,12 @@ uint32_t eval(int p, int q, bool *success) {
      * If that is the case, just throw away the parentheses.
      */
     if (*success) return eval(p + 1, q - 1, success);
-    else {/*puts("bracket");*/ return 0;}
+    else {return 0;}
   }
   else {
-    if (!(*success)) {/*puts("bracket");*/ return 0;}
+    if (!(*success)) {return 0;}
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
-    if (!(*success)) {/*puts("opetator");*/ return 0;}
+    if (!(*success)) {return 0;}
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
     uint32_t val2 = eval(op + 1, q, success);
