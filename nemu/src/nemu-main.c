@@ -43,10 +43,7 @@ int main(int argc, char *argv[]) {
     assert(tmp);
     tmp = expr(s, &success);
     if(result != tmp || !success)
-    {
       printf("%d %u %u\n", i, result, tmp);
-      return 0;
-    }
   }
 /*  engine_start();
 
