@@ -229,7 +229,7 @@ uint32_t eval(int p, int q, bool *success) {
         if (val2 == 0)
         {
           *success = false;
-          puts("/zero");
+          printf("zero: %d %d\n", p, q);
           return 0;
         }
         return val1 / val2;
