@@ -192,7 +192,11 @@ uint32_t eval(int p, int q, bool *success) {
      * Return the value of the number.
      */
     if (tokens[p].type == TK_INTNUM)
-      return atoi(tokens[p].str);
+    {
+      uint32_t x;
+      sscanf(tokens[p].str, "%u", &x);
+      return x;
+    }
     else
     {
       *success = false;

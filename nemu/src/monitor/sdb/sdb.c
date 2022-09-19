@@ -78,7 +78,8 @@ static int cmd_x(char *args)
 {
   char *arg = strtok(NULL, " ");
   if (arg == NULL) return 0;
-  int l = atoi(arg);
+  int l;
+  sscanf(arg, "%u", &l);
   arg = arg + strlen(arg) + 1;
   if (arg == NULL) return 0;
   bool success = true;
