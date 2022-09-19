@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
 #endif
 
   /* Start engine. */
+  printf("successfully get\n");
   FILE *fp = fopen("/input", "r");
   char s[65536];
   uint32_t result;
@@ -38,7 +39,7 @@ int main(int argc, char *argv[]) {
   for (int i = 1; i <= 9937; i++)
   {
     int tmp = fscanf(fp, "%u%s", &result, s);
-    printf("successfully get %s", s);
+    printf("successfully get %s\n", s);
     assert(tmp);
     if((result != expr(s, &success) || !success))
     {
