@@ -90,7 +90,7 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-      /*  Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+        /*Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len, substr_len, substr_start);*/
 
         position += substr_len;
@@ -195,6 +195,7 @@ uint32_t eval(int p, int q, bool *success) {
     {
       uint32_t x;
       sscanf(tokens[p].str, "%u", &x);
+      printf("%u\n", x);
       return x;
     }
     else
@@ -221,15 +222,16 @@ uint32_t eval(int p, int q, bool *success) {
     if (!(*success)) return 0;
 
     switch (tokens[op].type) {
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
+      case '+': printf("%u\n", val1 + val2); return val1 + val2;
+      case '-': printf("%u\n", val1 - val2);return val1 - val2;
+      case '*': printf("%u\n", val1 * val2);return val1 * val2;
       case '/': 
         if (val2 == 0)
         {
           *success = false;
           return 0;
         }
+        printf("%u\n", val1 + val2);
         return val1 / val2;
       default: assert(0);
     }
