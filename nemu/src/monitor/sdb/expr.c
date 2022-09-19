@@ -212,10 +212,9 @@ uint32_t eval(int p, int q, bool *success) {
     else {puts("bracket"); return 0;}
   }
   else {
-    if (!(*success)) return 0;
+    if (!(*success)) {puts("bracket"); return 0;}
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
-    puts("operator");
-    if (!(*success)) return 0;
+    if (!(*success)) {puts("opetator"); return 0;}
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
     uint32_t val2 = eval(op + 1, q, success);
