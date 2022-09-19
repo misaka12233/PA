@@ -131,7 +131,7 @@ bool check_parentheses(int p, int q, bool *success)
     if (cnt < 0) *success = false;
   }
   if (cnt != 0) *success = false;
-  printf("%d %d\n", p , q);
+  if (!(*success)) printf("%d %d\n", p , q);
   if (*success && tokens[p].type == '(' && tokens[q].type == ')')
   {
     cnt = 0;
