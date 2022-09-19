@@ -195,6 +195,7 @@ uint32_t eval(int p, int q, bool *success) {
     {
       uint32_t x;
       sscanf(tokens[p].str, "%u", &x);
+      printf("%u\n", x);
       return x;
     }
     else
