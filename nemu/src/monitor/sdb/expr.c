@@ -49,10 +49,10 @@ static struct rule {
   {"\\-", '-'},                // minus
   {"\\*", '*'},                // mutiply
   {"/", '/'},                  // divide
+  {"0x[0-9]*", TK_HEXNUM},     // hexadecimal-number
   {"[0-9]+", TK_DECNUM},  // decimal-number
   {"\\(", '('},                // left bracket
   {"\\)", ')'},                // right bracket
-  {"0x[0-9]*", TK_HEXNUM},     // hexadecimal-number
   {"\\$.[a-z0-9]*", TK_REGNUM},// register
   {"!=", TK_NEQ},
   {"&&", TK_AND}
