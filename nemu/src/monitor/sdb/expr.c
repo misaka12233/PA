@@ -21,8 +21,15 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ, TK_INTNUM,
-
+  TK_NOTYPE = 256, 
+  TK_EQ, 
+  TK_DECNUM, 
+  TK_HEXNUM, 
+  TK_REGNUM,
+  TK_NEQ,
+  TK_AND,
+  TK_NEG,
+  TK_DEREF
   /* TODO: Add more token types */
 
 };
@@ -39,12 +46,16 @@ static struct rule {
   {" +", TK_NOTYPE},           // spaces
   {"\\+", '+'},                // plus
   {"==", TK_EQ},               // equal
-  {"\\-", '-'},                  // minus
+  {"\\-", '-'},                // minus
   {"\\*", '*'},                // mutiply
   {"/", '/'},                  // divide
-  {"[1-9][0-9]*", TK_INTNUM},  // number
+  {"[1-9][0-9]*", TK_DECNUM},  // decimal-number
   {"\\(", '('},                // left bracket
-  {"\\)", ')'}                 // right bracket
+  {"\\)", ')'},                // right bracket
+  {"0x[0-9]*", TK_HEXNUM},     // hexadecimal-number
+  {"\\$.[a-z0-9]*", TK_REGNUM},// register
+  {"!=", TK_NEQ},
+  {"&&", TK_AND}
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -90,8 +101,8 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        /*Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);*/
+        Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
+            i, rules[i].regex, position, substr_len, substr_len, substr_start);
 
         position += substr_len;
 
@@ -106,6 +117,7 @@ static bool make_token(char *e) {
             tokens[nr_token].type = rules[i].token_type;
             memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
             memcpy(tokens[nr_token].str, substr_start, (substr_len <= 32)? substr_len : 32);
+            //printf("%s\n", tokens[nr_token].str);
             nr_token++;
         }
 
@@ -159,6 +171,20 @@ uint32_t get_main_op(int p, int q, bool *success)
       case ')': 
         cnt--; 
         break;
+      case TK_AND:
+        if (rk <= 4 && !cnt)
+        {
+          pos = i;
+          rk = 4;
+        }
+        break;
+      case TK_EQ: case TK_NEQ: 
+        if (rk <= 3 && !cnt)
+        {
+          pos = i;
+          rk = 3;
+        }
+        break;
       case '+': case '-': 
         if (rk <= 2 && !cnt)
         {
@@ -180,6 +206,9 @@ uint32_t get_main_op(int p, int q, bool *success)
   return pos;
 }
 
+word_t isa_reg_str2val(const char *s, bool *success);
+word_t vaddr_read(vaddr_t addr, int len);
+
 uint32_t eval(int p, int q, bool *success) {
   if (p > q) {
     /* Bad expression */
@@ -192,18 +221,19 @@ uint32_t eval(int p, int q, bool *success) {
      * For now this token should be a number.
      * Return the value of the number.
      */
-    if (tokens[p].type == TK_INTNUM)
-    {
-      uint32_t x;
+    uint32_t x = 0;;
+    if (tokens[p].type == TK_DECNUM)
       sscanf(tokens[p].str, "%u", &x);
-      return x;
-    }
+    else if (tokens[p].type == TK_HEXNUM)
+      sscanf(tokens[p].str, "%x", &x);
+    else if (tokens[p].type == TK_REGNUM)
+      x = isa_reg_str2val(tokens[p].str + 1, success);
     else
     {
       *success = false;
       puts("not number");
-      return 0;
     }
+    return x;
   }
   else if (check_parentheses(p, q, success) == true) {
     /* The expression is surrounded by a matched pair of parentheses.
@@ -212,6 +242,10 @@ uint32_t eval(int p, int q, bool *success) {
     if (*success) return eval(p + 1, q - 1, success);
     else {puts("bracket"); return 0;}
   }
+  else if (tokens[p].type == TK_DEREF)
+    return vaddr_read(eval(p + 1, q, success), 4);
+  else if (tokens[p].type == TK_NEG)
+    return -eval(p + 1, q, success);
   else {
     if (!(*success)) {puts("bracket"); return 0;}
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
@@ -222,9 +256,12 @@ uint32_t eval(int p, int q, bool *success) {
     if (!(*success)) return 0;
 
     switch (tokens[op].type) {
-      case '+': return val1 + val2;
-      case '-': return val1 - val2;
-      case '*': return val1 * val2;
+      case '+':    return val1 + val2;
+      case '-':    return val1 - val2;
+      case '*':    return val1 * val2;
+      case TK_EQ:  return val1 == val2;
+      case TK_NEQ: return val1 != val2;
+      case TK_AND: return val1 && val2;
       case '/': 
         if (val2 == 0)
         {
@@ -238,6 +275,11 @@ uint32_t eval(int p, int q, bool *success) {
   }
 }
 
+bool check_unary(int t)
+{
+  return (t != TK_DECNUM && t != TK_HEXNUM && t != TK_REGNUM && t != ')');
+}
+
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -245,6 +287,14 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
+
+  for (int i = 0; i < nr_token; i++) 
+  {
+    if (tokens[i].type == '*' && (i == 0 || check_unary(tokens[i - 1].type)) ) 
+      tokens[i].type = TK_DEREF;
+    else if (tokens[i].type == '-' && (i == 0 || check_unary(tokens[i - 1].type)) )
+      tokens[i].type = TK_NEG;
+  }
 
   return eval(0, nr_token - 1, success);
 }
