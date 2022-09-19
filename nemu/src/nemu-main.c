@@ -38,12 +38,13 @@ int main(int argc, char *argv[]) {
   bool success = true;
   for (int i = 1; i <= 9937; i++)
   {
-    int tmp = fscanf(fp, "%u%s", &result, s);
+    uint32_t tmp = fscanf(fp, "%u%s", &result, s);
     printf("successfully get %s\n", s);
     assert(tmp);
-    if((result != expr(s, &success) || !success))
+    tmp = expr(s, &success);
+    if(result != tmp || !success)
     {
-      printf("%d\n", i);
+      printf("%d %d %d\n", i, result, tmp);
       return 0;
     }
   }
