@@ -104,6 +104,7 @@ static bool make_token(char *e) {
           case TK_NOTYPE : break;
           default: 
             tokens[nr_token].type = rules[i].token_type;
+            memset(tokens[nr_token].str, 0, sizeof(tokens[nr_token].str));
             memcpy(tokens[nr_token].str, substr_start, (substr_len <= 32)? substr_len : 32);
             nr_token++;
         }
@@ -209,12 +210,12 @@ uint32_t eval(int p, int q, bool *success) {
      * If that is the case, just throw away the parentheses.
      */
     if (*success) return eval(p + 1, q - 1, success);
-    else {puts("bracket"); return 0;}
+    else { return 0;}
   }
   else {
-    if (!(*success)) {puts("bracket"); return 0;}
+    if (!(*success)) { return 0;}
     int op = get_main_op(p, q, success);       // the position of 主运算符 in the token expression
-    if (!(*success)) {puts("operator"); return 0;}
+    if (!(*success)) { return 0;}
     uint32_t val1 = eval(p, op - 1, success);
     if (!(*success)) return 0;
     uint32_t val2 = eval(op + 1, q, success);
@@ -228,7 +229,7 @@ uint32_t eval(int p, int q, bool *success) {
         if (val2 == 0)
         {
           *success = false;
-          puts("/zero");
+          //puts("/zero");
           return 0;
         }
         return val1 / val2;
