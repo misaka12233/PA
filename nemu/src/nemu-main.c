@@ -38,6 +38,7 @@ int main(int argc, char *argv[]) {
   for (int i = 1; i <= 9937; i++)
   {
     int tmp = fscanf(fp, "%u%s", &result, s);
+    printf("successfully get %s", s);
     assert(tmp);
     if((result != expr(s, &success) || !success))
     {
