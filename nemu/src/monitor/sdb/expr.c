@@ -159,14 +159,14 @@ uint32_t get_main_op(int p, int q, bool *success)
         cnt--; 
         break;
       case '+': case '-': 
-        if (rk < 2 && !cnt)
+        if (rk <= 2 && !cnt)
         {
           pos = i;
           rk = 2;
         }
         break;
       case '*': case '/': 
-        if (rk < 1 && !cnt)
+        if (rk <= 1 && !cnt)
         {
           pos = i;
           rk = 1;
