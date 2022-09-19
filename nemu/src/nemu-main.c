@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
 #endif
 
   /* Start engine. */
-  printf("successfully get\n");
+
   FILE *fp = fopen("/input", "r");
-  
+    printf("successfully get\n");
   uint32_t result;
   bool success = true;
   for (int i = 1; i <= 9937; i++)
