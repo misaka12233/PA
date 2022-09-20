@@ -111,6 +111,7 @@ void free_wp(int NO);
 static int cmd_w(char *args)
 {
   new_wp(args);
+  printf("%s", args);
 	return 0;
 }
 
