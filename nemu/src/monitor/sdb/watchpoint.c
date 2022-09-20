@@ -42,8 +42,9 @@ void init_wp_pool() {
 
 /* TODO: Implement the functionality of watchpoint */
 
-void free_wp(WP *wp)
+void free_wp(int NO)
 {
+  WP *wp = wp_pool + NO - 1;
   if (wp == head)
     head = head->next;
   else
@@ -76,7 +77,7 @@ void new_wp(char *e)
   if (!success)
   {
     puts("wrong expression!");
-    free_wp(newnode);
+    free_wp(newnode - wp_pool + 1);
   }
 }
 
@@ -95,4 +96,10 @@ bool check_watchpoint()
     }
   }
   return change;
+}
+
+void watchpoint_display()
+{
+  for (WP *i = head; i != NULL; i = i->next)
+    printf("watchpoint %d : %s\n     value: %d\n", i->NO, i->e, i->val);
 }
