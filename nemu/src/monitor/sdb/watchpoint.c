@@ -20,7 +20,7 @@
 typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
-  char *e;
+  char e[1000];
   uint32_t val;
   /* TODO: Add more members if necessary */
 
@@ -71,7 +71,8 @@ void new_wp(char *e)
   free_ = free_->next;
   newnode->next = head;
   head = newnode;
-  newnode->e = e;
+  memset(newnode->e, 0, sizeof(newnode->e));
+  strcpy(newnode->e, e);
   bool success = true;
   newnode->val = expr(e, &success);
   if (!success)
