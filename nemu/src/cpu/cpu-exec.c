@@ -42,7 +42,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (check_watchpoint())
   {
     set_nemu_state(NEMU_STOP, cpu.pc, 0);
-    printf("watch point above was changed at PC : %u\n", cpu.pc);
+    printf("watch point above was changed at PC : 0x%x\n", cpu.pc);
   }
 }
 
