@@ -79,3 +79,20 @@ void new_wp(char *e)
     free_wp(newnode);
   }
 }
+
+bool check_watchpoint()
+{
+  bool change = false;
+  for (WP *i = head; i != NULL; i = i->next)
+  {
+    bool success = true;
+    uint32_t new_val = expr(i->e, &success);
+    if (new_val != i->val)
+    {
+      change = true;
+      printf("watchpoint %d : %s\nOld value: %d\nNew value: %d\n", i->NO, i->e, i->val, new_val);
+      i->val = new_val;
+    }
+  }
+  return change;
+}
