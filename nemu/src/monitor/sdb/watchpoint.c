@@ -88,6 +88,7 @@ bool check_watchpoint()
   {
     bool success = true;
     uint32_t new_val = expr(i->e, &success);
+    printf("check watchpoint expression: %s\n", i->e);
     if (new_val != i->val)
     {
       change = true;
