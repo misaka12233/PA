@@ -30,9 +30,54 @@ static char *code_format =
 "  printf(\"%%u\", result); "
 "  return 0; "
 "}";
+int len = 0;
+
+void gen_num()
+{
+  
+  int k = rand() % 5 + 1;
+  if (len >= 65535) return;
+  buf[len++] = rand() % 9 + '1';
+  for (int i = 1; i < k; i++)
+  {
+    if (len >= 65535) break;
+    buf[len++] = rand() % 10 + '0';
+  }
+  buf[len++] = 'u';
+}
+
+void gen(char c)
+{
+  if (len >= 65535) return;
+  buf[len++] = c;
+}
+
+void gen_rand_op()
+{
+  if (len >= 65535) return;
+  switch (rand() % 4)
+  {
+  case 0:
+    buf[len++] = '+';
+    break;
+  case 1:
+    buf[len++] = '-';
+    break;
+  case 2:
+    buf[len++] = '*';
+    break;
+  default:
+    buf[len++] = '/';
+    break;
+  }
+}
 
 static void gen_rand_expr() {
-  buf[0] = '\0';
+  switch (rand() % 3) {
+    case 0: gen_rand_expr(); gen_rand_op(); gen_rand_expr(); break;
+    case 1: gen('('); gen_rand_expr(); gen(')'); break;
+    default: gen_num(); break;
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -44,6 +89,8 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    len = 0;
+    memset(buf, 0, sizeof(buf));
     gen_rand_expr();
 
     sprintf(code_buf, code_format, buf);
@@ -53,14 +100,16 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
+    int ret = system("gcc -Werror /tmp/.code.c -o /tmp/.expr");
     if (ret != 0) continue;
 
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
 
     int result;
-    fscanf(fp, "%d", &result);
+    int p = fscanf(fp, "%d", &result);
+    p = 1;
+    assert(p);
     pclose(fp);
 
     printf("%u %s\n", result, buf);

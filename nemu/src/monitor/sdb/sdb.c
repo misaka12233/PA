@@ -15,6 +15,7 @@
 
 #include <isa.h>
 #include <cpu/cpu.h>
+#include <memory/vaddr.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
@@ -49,10 +50,77 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
+  set_nemu_state(NEMU_QUIT, cpu.pc, 0);
   return -1;
 }
 
 static int cmd_help(char *args);
+
+static int cmd_si(char *args)
+{
+  char *arg = strtok(NULL, " ");
+	if (arg == NULL) cpu_exec(1);
+	else cpu_exec(atoi(arg));
+	return 0;
+}
+
+void watchpoint_display();
+
+static int cmd_info(char *args)
+{
+  char *arg = strtok(NULL, " ");
+	if (strcmp(arg, "r") == 0)
+		isa_reg_display();
+	else if (strcmp(arg, "w") == 0)
+    watchpoint_display();
+  else puts("Unkown Command");
+	return 0;
+}
+
+static int cmd_x(char *args)
+{
+  char *arg = strtok(NULL, " ");
+  if (arg == NULL) return 0;
+  int l;
+  sscanf(arg, "%u", &l);
+  arg = arg + strlen(arg) + 1;
+  if (arg == NULL) return 0;
+  bool success = true;
+  uint32_t pos = expr(arg, &success);
+  if (success)
+  {
+    for (int i = 0; i < l; i++, pos += 4)
+      printf("0x%08x\n", vaddr_read(pos, 4));
+  }
+  else puts("Wrong Experssion");
+	return 0;
+}
+
+static int cmd_p(char *args)
+{
+  bool success = true;
+  uint32_t val = expr(args, &success);
+  if (success) printf("%u\n", val);
+  else puts("Wrong Experssion");
+	return 0;
+}
+
+void new_wp(char *e);
+void free_wp(int NO);
+
+static int cmd_w(char *args)
+{
+  new_wp(args);
+	return 0;
+}
+
+static int cmd_d(char *args)
+{
+  uint32_t num;
+  sscanf(args, "%u", &num);
+  free_wp(num);
+	return 0;
+}
 
 static struct {
   const char *name;
@@ -62,7 +130,12 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
+  { "si", "Run N instructions of the program", cmd_si },
+	{ "info", "Print the status of the program", cmd_info },
+	{ "x", "Scan the internal storage", cmd_x },
+  { "p", "Calculate the value of an expression", cmd_p},
+  { "w", "set a watch point", cmd_w},
+  { "d", "delete a watch point", cmd_d}
   /* TODO: Add more commands */
 
 };
