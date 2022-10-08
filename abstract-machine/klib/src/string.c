@@ -55,10 +55,10 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  //char *from = in;
+  const char *from = in;
   char *to = out;
   for (int i = 0; i < n; i++)
-    to[i] = *((char*)(in + i));
+    to[i] = from[i];
   return out;
 }
 
