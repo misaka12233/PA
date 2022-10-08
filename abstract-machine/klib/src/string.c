@@ -63,7 +63,11 @@ void *memcpy(void *out, const void *in, size_t n) {
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
-  panic("Not implemented");
+  const char *a1 = s1, *a2 = s2;
+  for(int i = 0; i < n; i++)
+    if (a1[i] != a2[i])
+      return a1[i] - a2[i];
+  return 0;
 }
 
 #endif
