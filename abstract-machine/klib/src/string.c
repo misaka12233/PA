@@ -55,7 +55,7 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  const unsigned  char *from = in;
+  const unsigned char *from = in;
   char *to = out;
   for (int i = 0; i < n; i++)
     to[i] = from[i];
@@ -63,7 +63,7 @@ void *memcpy(void *out, const void *in, size_t n) {
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
-  const unsigned  char *a1 = s1, *a2 = s2;
+  const unsigned char *a1 = s1, *a2 = s2;
   for(int i = 0; i < n; i++)
     if (a1[i] != a2[i])
       return a1[i] - a2[i];
