@@ -44,7 +44,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
   
-  snprintf(iringbuf + now * SINGLE_INST_SIZE, SINGLE_INST_SIZE, "%s", _this->logbuf);
+  sprintf(iringbuf + now * SINGLE_INST_SIZE, "%s", _this->logbuf);
   now++;
 
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
