@@ -13,7 +13,7 @@ void sprint_int(char *out, size_t *len, int val)
 {
   if (val == 0) return;
   sprint_int(out, len, val / 10);
-  out[*len] = val % 10;
+  out[*len] = val % 10 + '0';
   (*len)++;
 }
 
