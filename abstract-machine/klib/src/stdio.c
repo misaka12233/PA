@@ -56,7 +56,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     i++;
     out[j] = '\0';
   }
-  assert(j == -1);
   return j;
 }
 
