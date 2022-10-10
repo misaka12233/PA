@@ -46,15 +46,17 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           return -1;
           break;
       }
-      i++;
     }
     else
     {
       out[j] = fmt[i];
-      i++, j++;
+      j++;
     }
+    i++;
   }
-  return i;
+  out[j] = '\0';
+  j++;
+  return j;
 }
 
 int sprintf(char *out, const char *fmt, ...) {
