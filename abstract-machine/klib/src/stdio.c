@@ -20,6 +20,7 @@ void sprint_int(char *out, size_t *len, int val)
 int vsprintf(char *out, const char *fmt, va_list ap) {
   size_t i, j;
   i = j = 0;
+  out[j] = '\0';
   while (fmt[i] != '\0')
   {
     if (fmt[i] == '%')
@@ -39,8 +40,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
         case 's':
           char *s = va_arg(ap, char *);
-          strcat(out + j, s);
           j += strlen(s);
+          strcat(out, s);
           break;
         default:
           return -1;
@@ -53,9 +54,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       j++;
     }
     i++;
+    out[j] = '\0';
   }
-  out[j] = '\0';
-  j++;
   return j;
 }
 
