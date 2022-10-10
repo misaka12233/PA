@@ -31,4 +31,19 @@ config MEM_RANDOM
   help
     This may help to find undefined behaviors.
 
+config MTRACE
+  depends on TRACE && TARGET_NATIVE_ELF && ENGINE_INTERPRETER
+  bool "Enable memory tracer"
+  default y
+
+config MTRACE_START
+  depends on MTRACE
+  hex "memory tracer start from"
+  default 0x80000000
+
+config MTRACE_END
+  depends on MTRACE
+  hex "memory tracer end at"
+  default 0x87ffffff
+
 endmenu #MEMORY
