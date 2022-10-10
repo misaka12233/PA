@@ -24,11 +24,16 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
+#define SINGLE_INST_SIZE 128
+#define RINGBUF_SIZE 10
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
+
+int now = 0;
+char iringbuf[RINGBUF_SIZE * SINGLE_INST_SIZE];
 
 void device_update();
 bool check_watchpoint();
@@ -38,6 +43,10 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   if (ITRACE_COND) { log_write("%s\n", _this->logbuf); }
 #endif
   if (g_print_step) { IFDEF(CONFIG_ITRACE, puts(_this->logbuf)); }
+  
+  snprintf(iringbuf + now * SINGLE_INST_SIZE, SINGLE_INST_SIZE, "%s", _this->logbuf);
+  now++;
+
   IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
   if (check_watchpoint())
   {
@@ -95,6 +104,12 @@ static void statistic() {
 
 void assert_fail_msg() {
   isa_reg_display();
+  for (int i = 0; i < RINGBUF_SIZE; i++)
+  {
+    printf("%s", iringbuf + i * SINGLE_INST_SIZE);
+    if (i == now) printf(" <--- the instruction handle now");
+    printf("\n");
+  }
   statistic();
 }
 
