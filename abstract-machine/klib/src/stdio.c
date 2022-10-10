@@ -39,8 +39,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           break;
         case 's':
           char *s = va_arg(ap, char *);
+          strcat(out + j, s);
           j += strlen(s);
-          strcat(out, s);
           break;
         default:
           return -1;
