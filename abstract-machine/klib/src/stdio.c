@@ -29,7 +29,6 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       switch (fmt[i])
       {
         case 'd':
-          assert(0);
           int x = va_arg(ap, int);
           if (x != 0)
             sprint_int(out, &j, x);
@@ -65,7 +64,6 @@ int sprintf(char *out, const char *fmt, ...) {
   va_start(ap, fmt);
   int return_val = vsprintf(out, fmt, ap);
   va_end(ap);
-  assert(return_val != -1);
   return return_val;
 }
 
