@@ -45,8 +45,10 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
 
+int func_cnt = 0;
+uint32_t *elf_name;
+uint32_t *elf_value;
 char *elf_str = NULL;
-uint32_t *elf_value, *elf_name;
 static char *elf_file = NULL;
 void init_elf()
 {
@@ -87,8 +89,12 @@ void init_elf()
   elf_name  = (uint32_t *) malloc(sizeof(uint32_t) * sym_cnt);
   for (int i = 0; i < sym_cnt; i++)
   {
-    elf_value[i] = syms[i].st_value;
-    elf_name[i]  = syms[i].st_name;
+    if (syms[i].st_info == STT_FUNC)
+    {
+      func_cnt++;
+      elf_value[func_cnt] = syms[i].st_value;
+      elf_name [func_cnt] = syms[i].st_name;
+    }
   }
 }
 

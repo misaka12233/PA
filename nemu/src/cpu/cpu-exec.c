@@ -83,13 +83,13 @@ static void exec_once(Decode *s, vaddr_t pc) {
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 
   #ifdef CONFIG_FTRACE
-    /*char ins_type[10];
+    char ins_type[10];
     uint32_t dst;
     sscanf(p, "%s%x", ins_type, &dst);
     if (!strcmp(ins_type, "jal") || !strcmp(ins_type, "jalr"))
     {
-
-    }*/
+      
+    }
   #endif
 #endif
 }
