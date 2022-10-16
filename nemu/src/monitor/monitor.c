@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include <isa.h>
+#include <elf.h>
 #include <memory/paddr.h>
 
 void init_rand();
@@ -44,6 +45,54 @@ static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
 
+char *elf_str = NULL;
+uint32_t *elf_value, *elf_name;
+static char *elf_file = NULL;
+void init_elf()
+{
+  if (elf_file == NULL) return;
+
+  FILE *fp = fopen(elf_file, "r");
+  Assert(fp, "Can not open '%s'", elf_file);
+
+  Elf32_Ehdr ehdr;
+  Assert(fread(&ehdr, 1, sizeof(ehdr), fp), "read NULL when read ELF");
+
+  Elf32_Shdr *shdrs = malloc(sizeof(Elf32_Shdr) * ehdr.e_shnum);
+  fseek(fp, ehdr.e_shoff, SEEK_SET);
+  Assert(fread(shdrs, ehdr.e_shnum, sizeof(Elf32_Shdr), fp), "read NULL when read ELF");
+
+  int sym_cnt = 0;
+  Elf32_Sym *syms = NULL;
+  for (int i = 0; i < ehdr.e_shnum; i++)
+  {
+    if (shdrs[i].sh_type == SHT_STRTAB && i != ehdr.e_shstrndx)
+    {
+      elf_str = (char *) malloc(shdrs[i].sh_size);
+      fseek(fp, shdrs[i].sh_offset, SEEK_SET);
+      Assert(fread(elf_str, shdrs[i].sh_size, sizeof(char), fp), "read NULL when read ELF");
+    }
+    else if (shdrs[i].sh_type == SHT_SYMTAB)
+    {
+      syms = (Elf32_Sym *) malloc(shdrs[i].sh_size);
+      sym_cnt = shdrs[i].sh_size / sizeof(Elf32_Sym);
+      fseek(fp, shdrs[i].sh_offset, SEEK_SET);
+      Assert(fread(syms, sym_cnt, sizeof(Elf32_Sym), fp), "read NULL when read ELF");
+    }
+  }
+
+  Assert(elf_str, "Can not find ELF string table");
+  Assert(syms, "Can not find ELF symbol table");
+
+  elf_value = (uint32_t *) malloc(sizeof(uint32_t) * sym_cnt);
+  elf_name  = (uint32_t *) malloc(sizeof(uint32_t) * sym_cnt);
+  for (int i = 0; i < sym_cnt; i++)
+  {
+    elf_value[i] = syms[i].st_value;
+    elf_name[i]  = syms[i].st_name;
+  }
+}
+
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
@@ -70,6 +119,7 @@ static int parse_args(int argc, char *argv[]) {
   const struct option table[] = {
     {"batch"    , no_argument      , NULL, 'b'},
     {"log"      , required_argument, NULL, 'l'},
+    {"ftrace"   , required_argument, NULL, 'f'},
     {"diff"     , required_argument, NULL, 'd'},
     {"port"     , required_argument, NULL, 'p'},
     {"help"     , no_argument      , NULL, 'h'},
@@ -81,6 +131,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'b': sdb_set_batch_mode(); break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
+      case 'f': elf_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
       case 1: img_file = optarg; return 0;
       default:
