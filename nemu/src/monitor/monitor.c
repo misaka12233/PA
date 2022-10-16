@@ -159,6 +159,9 @@ void init_monitor(int argc, char *argv[]) {
   /* Open the log file. */
   init_log(log_file);
 
+  /* Open ELF for ftrace */
+  init_elf();
+
   /* Initialize memory. */
   init_mem();
 
