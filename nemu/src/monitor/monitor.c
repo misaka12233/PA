@@ -51,7 +51,6 @@ static char *elf_file = NULL;
 void init_elf()
 {
   if (elf_file == NULL) return;
-  puts("ftracer is open");
   FILE *fp = fopen(elf_file, "r");
   Assert(fp, "Can not open '%s'", elf_file);
 
