@@ -97,6 +97,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
         printf("  ");
+      printf("0x%x", dst);
       printf("call ");
       for (int i = 0; i < func_cnt; i++)
       {
