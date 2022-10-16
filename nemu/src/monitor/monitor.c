@@ -105,8 +105,6 @@ void init_elf()
       elf_name [now] = syms[i].st_name;
     }
   }
-  for (int i = 0; i < func_cnt; i++)
-    printf("0x%x  %s\n", elf_value[i], elf_str + elf_name[i]);
 }
 
 static long load_img() {
