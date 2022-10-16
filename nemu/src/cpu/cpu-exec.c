@@ -89,10 +89,8 @@ static void exec_once(Decode *s, vaddr_t pc) {
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 
   #ifdef CONFIG_FTRACE
-    char ins_type[10];
-    uint32_t dst;
-    sscanf(p, "%s%x", ins_type, &dst);
-    if (!strcmp(ins_type, "jal"))
+    uint8_t op = (inst[0] << 1) >> 1;
+    if (op == 0x6f)
     {
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
@@ -100,15 +98,15 @@ static void exec_once(Decode *s, vaddr_t pc) {
       printf("call ");
       for (int i = func_cnt - 1; i >= 0; i--)
       {
-        if (elf_value[i] <= dst)
+        if (elf_value[i] <= s->dnpc)
         {
-          printf("%s @ 0x%x\n", elf_str + elf_name[i], dst);
+          printf("%s @ 0x%x\n", elf_str + elf_name[i], s->dnpc);
           break;
         }
       }
       deep++;
     }
-    else if (!strcmp(ins_type, "jalr"))
+    else if (op == 0x67)
     {
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
@@ -116,7 +114,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
       printf("ret ");
       for (int i = func_cnt - 1; i >= 0; i--)
       {
-        if (elf_value[i] <= dst)
+        if (elf_value[i] <= s->dnpc)
         {
           printf("%s\n", elf_str + elf_name[i]);
           break;
