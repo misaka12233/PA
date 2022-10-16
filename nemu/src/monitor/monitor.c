@@ -89,10 +89,9 @@ void init_elf()
   elf_name  = (uint32_t *) malloc(sizeof(uint32_t) * sym_cnt);
   for (int i = 0; i < sym_cnt; i++)
   {
-    if (syms[i].st_info == STT_FUNC)
+    if (ELF32_ST_TYPE(syms[i].st_info) == STT_FUNC)
     {
       int now;
-      puts("get a func");
       for (now = 0; now < func_cnt; now++)
         if (elf_value[now] > syms[i].st_value)
           break;
