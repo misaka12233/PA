@@ -98,7 +98,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
       for (int i = 0; i < deep; i++)
         printf("  ");
       printf("call ");
-      for (int i = 0; i < func_cnt; i++)
+      for (int i = func_cnt - 1; i >= 0; i--)
       {
         if (elf_value[i] <= dst)
         {
@@ -114,7 +114,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
       for (int i = 0; i < deep; i++)
         printf("  ");
       printf("ret ");
-      for (int i = 0; i < func_cnt; i++)
+      for (int i = func_cnt - 1; i >= 0; i--)
       {
         if (elf_value[i] <= dst)
         {
