@@ -57,6 +57,12 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc) {
   }
 }
 
+extern int func_cnt;
+extern uint32_t *elf_name;
+extern uint32_t *elf_value;
+extern char *elf_str;
+static int deep = 0;
+
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
   s->snpc = pc;
@@ -86,9 +92,37 @@ static void exec_once(Decode *s, vaddr_t pc) {
     char ins_type[10];
     uint32_t dst;
     sscanf(p, "%s%x", ins_type, &dst);
-    if (!strcmp(ins_type, "jal") || !strcmp(ins_type, "jalr"))
+    if (!strcmp(ins_type, "jal"))
     {
-      
+      printf("0x%x:  ", s->pc);
+      for (int i = 0; i < deep; i++)
+        printf("  ");
+      printf("call ");
+      for (int i = 0; i < func_cnt; i++)
+      {
+        if (elf_value[i] <= dst)
+        {
+          printf("%s @ 0x%x\n", elf_str + elf_name[i], dst);
+          break;
+        }
+      }
+      deep++;
+    }
+    else if (!strcmp(ins_type, "jalr"))
+    {
+      printf("0x%x:  ", s->pc);
+      for (int i = 0; i < deep; i++)
+        printf("  ");
+      printf("ret ");
+      for (int i = 0; i < func_cnt; i++)
+      {
+        if (elf_value[i] <= dst)
+        {
+          printf("%s\n", elf_str + elf_name[i]);
+          break;
+        }
+      }
+      deep--;
     }
   #endif
 #endif

@@ -91,9 +91,18 @@ void init_elf()
   {
     if (syms[i].st_info == STT_FUNC)
     {
+      int now;
+      for (now = 0; now < func_cnt; now++)
+        if (elf_value[now] > syms[i].st_value)
+          break;
       func_cnt++;
-      elf_value[func_cnt] = syms[i].st_value;
-      elf_name [func_cnt] = syms[i].st_name;
+      for (int i = func_cnt - 1; i > now; i--)
+      {
+        elf_value[i] = elf_value[i - 1];
+        elf_name [i] = elf_name [i - 1];
+      }
+      elf_value[now] = syms[i].st_value;
+      elf_name [now] = syms[i].st_name;
     }
   }
 }
