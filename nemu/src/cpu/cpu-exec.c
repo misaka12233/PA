@@ -92,7 +92,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
     uint8_t op = inst[0] & 0x7f;
     if (op == 0x6f)
     {
-      printf("%s\n", p);
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
         printf("  ");
@@ -109,7 +108,6 @@ static void exec_once(Decode *s, vaddr_t pc) {
     }
     else if (op == 0x67)
     {
-      printf("%s\n", p);
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
         printf("  ");
