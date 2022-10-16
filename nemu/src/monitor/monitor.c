@@ -44,7 +44,7 @@ static char *log_file = NULL;
 static char *diff_so_file = NULL;
 static char *img_file = NULL;
 static int difftest_port = 1234;
-
+/*
 char *elf_str = NULL;
 uint32_t *elf_value, *elf_name;
 static char *elf_file = NULL;
@@ -92,7 +92,7 @@ void init_elf()
     elf_name[i]  = syms[i].st_name;
   }
 }
-
+*/
 static long load_img() {
   if (img_file == NULL) {
     Log("No image is given. Use the default build-in image.");
@@ -131,7 +131,7 @@ static int parse_args(int argc, char *argv[]) {
       case 'b': sdb_set_batch_mode(); break;
       case 'p': sscanf(optarg, "%d", &difftest_port); break;
       case 'l': log_file = optarg; break;
-      case 'f': elf_file = optarg; break;
+      //case 'f': elf_file = optarg; break;
       case 'd': diff_so_file = optarg; break;
       case 1: img_file = optarg; return 0;
       default:
@@ -160,7 +160,7 @@ void init_monitor(int argc, char *argv[]) {
   init_log(log_file);
 
   /* Open ELF for ftrace */
-  init_elf();
+  //init_elf();
 
   /* Initialize memory. */
   init_mem();
