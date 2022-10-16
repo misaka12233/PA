@@ -61,7 +61,9 @@ extern int func_cnt;
 extern uint32_t *elf_name;
 extern uint32_t *elf_value;
 extern char *elf_str;
-static int deep = 0;
+#ifdef CONFIG_FTRACE
+  static int deep = 0;
+#endif
 
 static void exec_once(Decode *s, vaddr_t pc) {
   s->pc = pc;
