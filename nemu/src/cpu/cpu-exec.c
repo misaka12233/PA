@@ -89,10 +89,10 @@ static void exec_once(Decode *s, vaddr_t pc) {
       MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst.val, ilen);
 
   #ifdef CONFIG_FTRACE
-    uint8_t op = (inst[ilen - 1] << 1) >> 1;
+    uint8_t op = (inst[0] << 1) >> 1;
     if (op == 0x6f)
     {
-      printf("0x%x\n", s->dnpc);
+      printf("%s\n", p);
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
         printf("  ");
@@ -109,7 +109,7 @@ static void exec_once(Decode *s, vaddr_t pc) {
     }
     else if (op == 0x67)
     {
-      printf("0x%x\n", s->dnpc);
+      printf("%s\n", p);
       printf("0x%x:  ", s->pc);
       for (int i = 0; i < deep; i++)
         printf("  ");
