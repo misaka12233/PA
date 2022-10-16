@@ -87,6 +87,7 @@ void init_elf()
 
   elf_value = (uint32_t *) malloc(sizeof(uint32_t) * sym_cnt);
   elf_name  = (uint32_t *) malloc(sizeof(uint32_t) * sym_cnt);
+  printf("get symbols : %d\n", sym_cnt);
   for (int i = 0; i < sym_cnt; i++)
   {
     if (syms[i].st_info == STT_FUNC)
