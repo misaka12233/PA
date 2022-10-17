@@ -9,10 +9,10 @@ int printf(const char *fmt, ...) {
   panic("Not implemented");
 }
 
-void sprint_int(char *out, size_t *len, int val)
+void sprint_uint(char *out, size_t *len, unsigned int val)
 {
   if (val == 0) return;
-  sprint_int(out, len, val / 10);
+  sprint_uint(out, len, val / 10);
   out[*len] = val % 10 + '0';
   (*len)++;
 }
@@ -30,8 +30,14 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       {
         case 'd':
           int x = va_arg(ap, int);
+          if (x < 0)
+          {
+            out[j] = '-';
+            j++;
+            x = -x;
+          }
           if (x != 0)
-            sprint_int(out, &j, x);
+            sprint_uint(out, &j, x);
           else
           {
             out[j] = '0';
