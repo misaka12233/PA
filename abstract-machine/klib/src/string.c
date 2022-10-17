@@ -22,7 +22,9 @@ char *strcpy(char *dst, const char *src) {
 }
 
 char *strncpy(char *dst, const char *src, size_t n) {
-  panic("Not implemented");
+  for (int i = 0; i < n; i++)
+    dst[i] = src[i];
+  return dst;
 }
 
 char *strcat(char *dst, const char *src) {
@@ -40,7 +42,10 @@ int strcmp(const char *s1, const char *s2) {
 }
 
 int strncmp(const char *s1, const char *s2, size_t n) {
-  panic("Not implemented");
+  for(int i = 0; i < n; i++)
+    if (s1[i] != s2[i])
+      return s1[i] - s2[i];
+  return 0;
 }
 
 void *memset(void *s, int c, size_t n) {
@@ -55,19 +60,11 @@ void *memmove(void *dst, const void *src, size_t n) {
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
-  const unsigned char *from = in;
-  char *to = out;
-  for (int i = 0; i < n; i++)
-    to[i] = from[i];
-  return out;
+  return strncpy(out, in, n);
 }
 
 int memcmp(const void *s1, const void *s2, size_t n) {
-  const unsigned char *a1 = s1, *a2 = s2;
-  for(int i = 0; i < n; i++)
-    if (a1[i] != a2[i])
-      return a1[i] - a2[i];
-  return 0;
+  return strncmp(s1, s2, n);
 }
 
 #endif
