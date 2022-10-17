@@ -24,16 +24,18 @@
  * You can modify this value as you want.
  */
 #define MAX_INST_TO_PRINT 10
-#define SINGLE_INST_SIZE 128
-#define RINGBUF_SIZE 10
 
 CPU_state cpu = {};
 uint64_t g_nr_guest_inst = 0;
 static uint64_t g_timer = 0; // unit: us
 static bool g_print_step = false;
 
+#ifdef CONFIG_ITRACE
+#define SINGLE_INST_SIZE 128
+#define RINGBUF_SIZE 10
 int now = 0;
 char iringbuf[RINGBUF_SIZE * SINGLE_INST_SIZE];
+#endif
 
 void device_update();
 bool check_watchpoint();
