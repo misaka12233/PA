@@ -30,14 +30,15 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       {
         case 'd':
           int x = va_arg(ap, int);
+          unsigned int x_abs = x;
           if (x < 0)
           {
             out[j] = '-';
             j++;
-            x = -x;
+            x_abs = -x_abs;
           }
           if (x != 0)
-            sprint_uint(out, &j, x);
+            sprint_uint(out, &j, x_abs);
           else
           {
             out[j] = '0';
