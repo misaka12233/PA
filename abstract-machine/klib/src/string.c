@@ -56,7 +56,9 @@ void *memset(void *s, int c, size_t n) {
 }
 
 void *memmove(void *dst, const void *src, size_t n) {
-  panic("Not implemented");
+  char *tmp = malloc(sizeof(char) * n);
+  tmp = strncpy(tmp, src, n);
+  return strncpy(dst, tmp, n);
 }
 
 void *memcpy(void *out, const void *in, size_t n) {
