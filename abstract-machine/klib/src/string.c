@@ -34,7 +34,7 @@ int strcmp(const char *s1, const char *s2) {
   size_t len1 = strlen(s1), len2 = strlen(s2);
   for(size_t i = 0; i < len1 || i < len2; i++)
     if (s1[i] != s2[i])
-      return s1[i] - s2[i];
+      return (int)s1[i] - s2[i];
   return 0;
 }
 
