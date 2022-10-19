@@ -9,7 +9,7 @@ int printf(const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   char out[65536];
-  int return_val = sprintf(out, fmt, ap);
+  int return_val = vsprintf(out, fmt, ap);
   va_end(ap);
   for (int i = 0; i < return_val; i++)
     putch(out[i]);
