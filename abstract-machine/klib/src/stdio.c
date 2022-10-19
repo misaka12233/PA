@@ -6,7 +6,14 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 int printf(const char *fmt, ...) {
-  panic("Not implemented");
+  va_list ap;
+  va_start(ap, fmt);
+  char out[65536];
+  int return_val = sprintf(out, fmt, ap);
+  va_end(ap);
+  for (int i = 0; i < return_val; i++)
+    putch(out[i]);
+  return return_val;
 }
 
 void sprint_uint(char *out, size_t *len, unsigned int val)
