@@ -72,7 +72,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           j = (length != 0) ? my_st + length : j;
           break;
         case 's':
-          *s = va_arg(ap, char *);
+          s = va_arg(ap, char *);
           j += strlen(s);
           strcat(out, s);
           break;
