@@ -39,10 +39,10 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         length = length * 10 + fmt[i] - '0';
         i++;
       }
+      int my_st, my_ed;
       switch (fmt[i])
       {
         case 'd':
-          int my_st, my_ed;
           my_st = j;
           int x = va_arg(ap, int);
           unsigned int x_abs = x;
