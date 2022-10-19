@@ -59,7 +59,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             out[j] = '0';
             j++;
           }
-          ed = j;
+          ed = j - 1;
           if (st - ed + 1 < length)
           {
             int new_st = st + length - 1 + st - ed;
