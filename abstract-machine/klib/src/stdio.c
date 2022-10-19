@@ -68,7 +68,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             for (int i = st; i < new_st; i++)
               out[i] = '0';
           }
-          j = length ? st + length : j;
+          j = (length != 0) ? st + length : j;
           break;
         case 's':
           char *s = va_arg(ap, char *);
