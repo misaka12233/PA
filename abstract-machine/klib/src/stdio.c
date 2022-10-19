@@ -40,6 +40,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
         i++;
       }
       int my_st, my_ed;
+      char *s;
       switch (fmt[i])
       {
         case 'd':
@@ -71,7 +72,7 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
           j = (length != 0) ? my_st + length : j;
           break;
         case 's':
-          char *s = va_arg(ap, char *);
+          *s = va_arg(ap, char *);
           j += strlen(s);
           strcat(out, s);
           break;
