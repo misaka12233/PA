@@ -4,19 +4,8 @@
 void __am_timer_init() {
 }
 
-void outq(uint64_t x)
-{
-  if (x < 10)
-  {
-    outb(SERIAL_PORT, x);
-    return;
-  }
-  outq(x / 10);
-  outb(SERIAL_PORT, x % 10);
-}
-
 void __am_timer_uptime(AM_TIMER_UPTIME_T *uptime) {
-  outq(uptime->us);
+  uptime->us = ((uint64_t)inl(RTC_ADDR + 32) << 32) + inl(RTC_ADDR);
 }
 
 void __am_timer_rtc(AM_TIMER_RTC_T *rtc) {
