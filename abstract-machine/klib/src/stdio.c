@@ -33,9 +33,17 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
     if (fmt[i] == '%')
     {
       i++;
+      int length = 0;
+      while ('0' <= fmt[i] && fmt[i] <= '9')
+      {
+        length = length * 10 + fmt[i] - '0';
+        i++;
+      }
       switch (fmt[i])
       {
         case 'd':
+          int st, ed;
+          st = j;
           int x = va_arg(ap, int);
           unsigned int x_abs = x;
           if (x < 0)
@@ -51,6 +59,16 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             out[j] = '0';
             j++;
           }
+          ed = j;
+          if (st - ed + 1 < length)
+          {
+            int new_st = st + length - 1 + st - ed;
+            for (int i = st + length - 1; i >= new_st; i--)
+              out[i] = out[st + i - new_st];
+            for (int i = st; i < new_st; i++)
+              out[i] = '0';
+          }
+          j = length ? st + length : j;
           break;
         case 's':
           char *s = va_arg(ap, char *);
