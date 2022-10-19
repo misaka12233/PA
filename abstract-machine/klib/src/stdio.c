@@ -42,8 +42,8 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
       switch (fmt[i])
       {
         case 'd':
-          int st, ed;
-          st = j;
+          int my_st, my_ed;
+          my_st = j;
           int x = va_arg(ap, int);
           unsigned int x_abs = x;
           if (x < 0)
@@ -59,16 +59,16 @@ int vsprintf(char *out, const char *fmt, va_list ap) {
             out[j] = '0';
             j++;
           }
-          ed = j - 1;
-          if (ed - st + 1 < length)
+          my_ed = j - 1;
+          if (my_ed - my_st + 1 < length)
           {
-            int new_st = st + length - 1 + st - ed;
-            for (int i = st + length - 1; i >= new_st; i--)
-              out[i] = out[st + i - new_st];
-            for (int i = st; i < new_st; i++)
+            int new_st = my_st + length - 1 + my_st - my_ed;
+            for (int i = my_st + length - 1; i >= new_st; i--)
+              out[i] = out[my_st + i - new_st];
+            for (int i = my_st; i < new_st; i++)
               out[i] = '0';
           }
-          j = (length != 0) ? st + length : j;
+          j = (length != 0) ? my_st + length : j;
           break;
         case 's':
           char *s = va_arg(ap, char *);
